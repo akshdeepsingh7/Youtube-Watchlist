@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📺</text></svg>">
 
     <style>
@@ -214,10 +214,76 @@
         #loading-overlay.show { opacity: 1; visibility: visible; }
         #loading-overlay .fa-spinner { font-size: 3rem; margin-bottom: 1.5rem; }
         #loading-overlay p { font-size: 1.2rem; font-weight: 500; }
-        @media (max-width: 768px) { body { padding: 1rem; } header h1 { font-size: 1.75rem; } }
+        
+        footer {
+            margin-top: 3rem; padding: 1.5rem 0; text-align: center; color: var(--text-secondary);
+            font-size: 0.9rem; border-top: 1px solid var(--border-color);
+        }
+        footer a {
+            color: var(--text-tertiary); text-decoration: none; font-weight: 500;
+            transition: color var(--transition-speed);
+        }
+        footer a:hover { color: var(--accent-color); }
+        footer a i { margin-right: 0.4rem; }
+
+        /* --- MOBILE COMPATIBILITY STYLES --- */
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            header h1 { font-size: 1.75rem; }
+            .add-video-section, .controls-bar { padding: 1rem; }
+            #video-list-container {
+                /* Forces single column on tablets and below for grid view */
+                grid-template-columns: 1fr;
+            }
+            .list-view .thumbnail-container {
+                width: 120px; /* Smaller thumbnail on list view */
+            }
+            .modal-content {
+                max-height: 95vh; /* A bit more vertical room for modals */
+            }
+            .modal-header, .modal-body, .modal-footer {
+                padding: 1rem;
+            }
+            .modal-footer {
+                flex-direction: column;
+                align-items: stretch; /* Makes buttons full-width */
+            }
+        }
+        
         @media (max-width: 600px) {
-            .controls-bar { flex-direction: column; align-items: stretch; }
+            header h1 { font-size: 1.5rem; }
+            .header-title { gap: 0.5rem; }
+            
+            #add-video-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .controls-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
             .search-container, .control-group { width: 100%; }
+            .control-group {
+                justify-content: space-between;
+            }
+            .control-group > * {
+                flex-grow: 1; /* Make sort and clear buttons share space */
+            }
+
+            .card-actions {
+                gap: 0.75rem; /* More space between buttons */
+            }
+            .icon-btn {
+                /* Larger tap targets for buttons on cards */
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+            
+            .empty-state {
+                padding: 3rem 1rem;
+            }
         }
     </style>
 </head>
@@ -261,8 +327,18 @@
         </div>
 
         <main id="video-list-container"></main>
+        
+        <footer>
+            <p>
+                Created by 
+                <a href="https://github.com/akshdeepsingh7/Youtube-Watchlist" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-github"></i> akshdeepsingh7
+                </a>
+            </p>
+        </footer>
     </div>
 
+    <!-- Modals -->
     <div id="preview-modal" class="modal">
         <div class="modal-content">
             <button class="modal-close-btn" data-modal-close><i class="fa-solid fa-times"></i></button>
@@ -416,7 +492,7 @@
             const themeIcon = this.DOM.themeToggleBtn.querySelector('i');
             themeIcon.className = `fa-solid ${isDark ? 'fa-sun' : 'fa-moon'}`;
             this.DOM.themeToggleBtn.dataset.tooltip = `Switch to ${isDark ? 'Light' : 'Dark'} Mode`;
-            this.DOM.listContainer.className = layout === 'grid' ? 'grid-view' : 'list-view';
+            this.DOM.listContainer.className = layout === 'grid' ? '' : 'list-view';
             this.DOM.layoutToggle.checked = layout === 'grid';
             this.DOM.autoplayToggle.checked = autoplay;
             this.DOM.sortSelect.value = sort;
